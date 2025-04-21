@@ -77,14 +77,21 @@ app.post("/create-room", middleware_1.Authware, async (req, res) => {
     //@ts-ignore
     const userid = req.id;
     const slug = data.data?.slug;
-    const room = await client_1.client.room.create({
-        data: {
-            slug: slug,
-            adminid: userid
-        }
-    });
-    res.json({
-        roomid: room.id
-    });
+    try {
+        const room = await client_1.client.room.create({
+            data: {
+                slug: slug,
+                adminid: userid
+            }
+        });
+        res.json({
+            roomid: room.id
+        });
+    }
+    catch (e) {
+        res.json({
+            "message": "this room already exist"
+        });
+    }
 });
 app.listen(3001);

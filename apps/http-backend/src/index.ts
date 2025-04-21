@@ -107,6 +107,7 @@ app.post("/create-room",Authware,async(req,res )=>{
 //@ts-ignore
   const userid=req.id
  const slug= data.data?.slug
+ try{
 
  const room= await client.room.create({
     data:{
@@ -118,6 +119,13 @@ app.post("/create-room",Authware,async(req,res )=>{
  res.json({
     roomid:room.id
  })
+}catch(e){
+    res.json({
+           
+    "message":"this room already exist"
+    })
+}
+
 
 
 
