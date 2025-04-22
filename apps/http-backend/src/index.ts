@@ -1,5 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt"
+import cors from "cors"
+
 import jwt from "jsonwebtoken";
 import {jwt_secret} from "@repo/backend_common/index"
 import { Createroom, signinschema ,signupschema} from "@repo/common/zodschema";
@@ -8,6 +10,7 @@ import { Authware } from "./middleware";
 const app= express()
 
 app.use(express.json())
+app.use(cors())
 
 
 
@@ -49,6 +52,7 @@ app.post("/signin",async(req,res)=>{
     }
     const email=validateddata.data?.email
     const password=validateddata.data?.password
+    
 
 
     const user= await client.user.findFirst({
@@ -126,13 +130,26 @@ app.post("/create-room",Authware,async(req,res )=>{
     })
 }
 
+})
 
+app.get("/chat/:roomid",async (req,res)=>{
 
+    const roomid=Number(req.params.roomid)
 
+    const messages= await client.chat.findMany({
+        where:{
+            roomid
+        },
+        orderBy:{
+            id:"desc"
+        },
 
+        take:50
+    })
 
-
-
+    res.json({
+        messages
+    })
 })
 
 

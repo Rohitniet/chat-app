@@ -1,6 +1,7 @@
 import { WebSocket, WebSocketServer } from 'ws';
 import { jwt_secret } from '@repo/backend_common/index';
 import jwt from 'jsonwebtoken'
+import { client } from '@repo/db/client';
 
 const wss = new WebSocketServer({ port: 8080 });
 
@@ -62,7 +63,7 @@ wss.on('connection', function connection(ws,request) {
 
 
 
-  ws.on('message', function message(data) {
+  ws.on('message',async function message(data) {
     
     const parsedata= JSON.parse(data as unknown as string)
     
@@ -71,7 +72,7 @@ wss.on('connection', function connection(ws,request) {
 
     const user=users.find(x => x.ws === ws )
     
-    user?.rooms.push(parsedata.room)
+    user?.rooms.push(parsedata.roomid)
   }
 
 
@@ -84,27 +85,41 @@ wss.on('connection', function connection(ws,request) {
     return;
    }
 
-   user.rooms= user.rooms.filter(x =>x !== parsedata.room)
+   user.rooms= user.rooms.filter(x =>x !== parsedata.roomid)
 
   }
 
 
   if(parsedata.type==="chat"){
    
-   const room= parsedata.room
+   const roomid= parsedata.roomid
    const message=parsedata.message
+
+   await client.chat.create({
+    data:{
+      //@ts-ignore
+      message,
+      roomid,
+      userid
+
+
+    }
+   })
+  
+
+
   
 
 
    users.forEach(user =>{
 
-    if(user.rooms.includes(room)){
+    if(user.rooms.includes(roomid)){
 
       user.ws.send(JSON.stringify({
 
         type:"chat",
         message:message,
-        room
+        roomid
       }))
     }
    })

@@ -1,102 +1,88 @@
-import Image, { type ImageProps } from "next/image";
-import { Button } from "@repo/ui/button";
-import styles from "./page.module.css";
 
-type Props = Omit<ImageProps, "src"> & {
-  srcLight: string;
-  srcDark: string;
-};
+'use client';
+import React from 'react';
 
-const ThemeImage = (props: Props) => {
-  const { srcLight, srcDark, ...rest } = props;
+import { MessageSquare, Users, Shield, Zap, ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
+function App() {
+
+  const router =useRouter()
   return (
-    <>
-      <Image {...rest} src={srcLight} className="imgLight" />
-      <Image {...rest} src={srcDark} className="imgDark" />
-    </>
-  );
-};
-
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <ThemeImage
-          className={styles.logo}
-          srcLight="turborepo-dark.svg"
-          srcDark="turborepo-light.svg"
-          alt="Turborepo logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>apps/web/app/page.tsx</code>
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new/clone?demo-description=Learn+to+implement+a+monorepo+with+a+two+Next.js+sites+that+has+installed+three+local+packages.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4K8ZISWAzJ8X1504ca0zmC%2F0b21a1c6246add355e55816278ef54bc%2FBasic.png&demo-title=Monorepo+with+Turborepo&demo-url=https%3A%2F%2Fexamples-basic-web.vercel.sh%2F&from=templates&project-name=Monorepo+with+Turborepo&repository-name=monorepo-turborepo&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fturborepo%2Ftree%2Fmain%2Fexamples%2Fbasic&root-directory=apps%2Fdocs&skippable-integrations=1&teamSlug=vercel&utm_source=create-turbo"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://turbo.build/docs?utm_source"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-gray-900 text-white">
+      {/* Navigation */}
+      <nav className="container mx-auto px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <MessageSquare className="h-8 w-8 text-blue-500" />
+            <span className="text-2xl font-bold">ChatFlow</span>
+          </div>
+          <div className="space-x-4">
+            <button className="px-4 py-2 text-gray-300 hover:text-white transition-colors " onClick={()=>{router.push("/signin")}}>
+              Sign in
+            </button>
+            <button className="px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors" onClick={()=>{router.push("/signup")}}>
+              Sign up
+            </button>
+          </div>
         </div>
-        <Button appName="web" className={styles.secondary}>
-          Open alert
-        </Button>
+      </nav>
+
+      {/* Hero Section */}
+      <main className="container mx-auto px-6 py-16">
+        <div className="flex flex-col items-center text-center">
+          <h1 className="text-5xl font-bold mb-6 leading-tight">
+            Connect and Chat with <br />
+            <span className="text-blue-500">Anyone, Anywhere</span>
+          </h1>
+          <p className="text-gray-400 text-xl max-w-2xl mb-8">
+            Experience seamless communication with our modern chat platform.
+            Connect with friends, family, and colleagues in real-time.
+          </p>
+          <button className="group flex items-center space-x-2 px-8 py-4 bg-blue-600 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors">
+            <span>Get Started</span>
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
+
+        {/* Features */}
+        <div className="grid md:grid-cols-3 gap-8 mt-20">
+          <div className="p-6 bg-gray-800 rounded-xl">
+            <Users className="w-12 h-12 text-blue-500 mb-4" />
+            <h3 className="text-xl font-semibold mb-2">Group Chats</h3>
+            <p className="text-gray-400">
+              Create and manage multiple group conversations with ease.
+            </p>
+          </div>
+          <div className="p-6 bg-gray-800 rounded-xl">
+            <Shield className="w-12 h-12 text-blue-500 mb-4" />
+            <h3 className="text-xl font-semibold mb-2">Secure Messaging</h3>
+            <p className="text-gray-400">
+              End-to-end encryption ensures your conversations stay private.
+            </p>
+          </div>
+          <div className="p-6 bg-gray-800 rounded-xl">
+            <Zap className="w-12 h-12 text-blue-500 mb-4" />
+            <h3 className="text-xl font-semibold mb-2">Real-time Chat</h3>
+            <p className="text-gray-400">
+              Instant message delivery for smooth conversations.
+            </p>
+          </div>
+        </div>
       </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com/templates?search=turborepo&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://turbo.build?utm_source=create-turbo"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to turbo.build →
-        </a>
+
+      {/* Footer */}
+      <footer className="container mx-auto px-6 py-8 border-t border-gray-800">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <MessageSquare className="h-6 w-6 text-blue-500" />
+            <span className="font-semibold">ChatFlow</span>
+          </div>
+          <p className="text-gray-500">© 2025 ChatFlow. All rights reserved.</p>
+        </div>
       </footer>
     </div>
   );
 }
+
+export default App;

@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const cors_1 = __importDefault(require("cors"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const index_1 = require("@repo/backend_common/index");
 const zodschema_1 = require("@repo/common/zodschema");
@@ -12,6 +13,7 @@ const client_1 = require("@repo/db/client");
 const middleware_1 = require("./middleware");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
+app.use((0, cors_1.default)());
 app.post("/signup", async (req, res) => {
     const validateddata = zodschema_1.signupschema.safeParse(req.body);
     if (validateddata.data == undefined) {
@@ -40,6 +42,7 @@ app.post("/signin", async (req, res) => {
     }
     const email = validateddata.data?.email;
     const password = validateddata.data?.password;
+    console.log(email);
     const user = await client_1.client.user.findFirst({
         where: {
             email: email
@@ -93,5 +96,20 @@ app.post("/create-room", middleware_1.Authware, async (req, res) => {
             "message": "this room already exist"
         });
     }
+});
+app.get("/chat/:roomid", async (req, res) => {
+    const roomid = Number(req.params.roomid);
+    const messages = await client_1.client.chat.findMany({
+        where: {
+            roomid
+        },
+        orderBy: {
+            id: "desc"
+        },
+        take: 50
+    });
+    res.json({
+        messages
+    });
 });
 app.listen(3001);
