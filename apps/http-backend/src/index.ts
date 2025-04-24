@@ -154,6 +154,29 @@ app.get("/chat/:roomid",async (req,res)=>{
 
 
 
+app.get("/room/:slug",async (req,res)=>{
+
+    const slug=req.params.slug
+
+    const room= await client.room.findFirst({
+        where:{
+            slug
+        },
+       
+    })
+    if(room===null){
+        res.json({
+  message:"room not found"
+        })
+        return
+    }
+
+    res.json({
+       room
+    })
+})
+
+
 
 
 

@@ -42,7 +42,6 @@ app.post("/signin", async (req, res) => {
     }
     const email = validateddata.data?.email;
     const password = validateddata.data?.password;
-    console.log(email);
     const user = await client_1.client.user.findFirst({
         where: {
             email: email
